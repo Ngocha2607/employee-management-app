@@ -1,0 +1,38 @@
+.employee {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .employee h3 {
+    margin: 0 0 0.25rem 0;
+  }
+  
+  .phone, .email, .dob {
+    font-style: italic;
+  }
+  
+.edits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.edits button {
+  background-color: #62e9ee;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem;
+  color: black;
+  cursor: pointer;
+}
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: red;
+}
