@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { removeEmployeeFromList } from "../../store/reducers/employee-slice";
+import { removeEmployeeFromList } from "../../../store/reducers/employee-slice";
 import classes from "./EmployeeItem.module.css";
-import UpdateEmployee from "../../pages/UpdateEmployee";
+import UpdateEmployee from "../../../pages/UpdateEmployee";
 
 const EmployeeItem = (props) => {
   const dispatch = useDispatch();

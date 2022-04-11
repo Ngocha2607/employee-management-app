@@ -1,5 +1,5 @@
 import React from "react";
-import UpdateEmployeeForm from "../components/employees/UpdateEmployeeForm";
+import UpdateEmployeeForm from '../components/employees/employeeForm/UpdateEmployeeForm';
 
 const UpdateEmployee = (props) => {
   return (

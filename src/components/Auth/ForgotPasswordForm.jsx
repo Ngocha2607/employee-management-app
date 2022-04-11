@@ -13,7 +13,7 @@ const ForgotPasswordForm = () => {
 
   const closeForgotPassword = () => {
     dispatch(isShowLogin());
-    navigate("/auth");
+    navigate("/");
   };
 
   const submitHandler = (event) => {
@@ -46,7 +46,7 @@ const ForgotPasswordForm = () => {
         }
       })
       .then((data) => {
-        navigate("/auth");
+        navigate("/");
       })
       .catch((err) => {
         alert(err.message);

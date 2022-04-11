@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import EmployeeItem from "./EmployeeItem";
-import Card from "../UI/Card";
-import EmployeesManagement from "../../assets/EmployeesManagement.jpg";
-
+import Card from "../../UI/Card";
 import classes from "./ListEmployee.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { replaceData } from "../../store/reducers/employee-slice";
+import { replaceData } from "../../../store/reducers/employee-slice";
+import EmployeeItem from "../employeeItem/EmployeeItem";
 
 const ListEmployee = () => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const employees = useSelector((state) => state.employee.employees);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -74,33 +71,24 @@ const ListEmployee = () => {
   ));
 
   return (
-    <>
-      <section className={classes.employees}>
-        {isLoggedIn && (
-          <Card>
-            <div className={classes.employeesHeader}>
-              <ul>
-                <li>Name</li>
-                <li>Phone</li>
-                <li>DateBirth</li>
-                <li>Email</li>
-                <li>Action</li>
-              </ul>
-            </div>
-            {employees.length ? (
-              <ul>{employeesList}</ul>
-            ) : (
-              <p>No employees available!</p>
-            )}
-          </Card>
-        )}
-      </section>
-      {!isLoggedIn && (
-        <div className={classes.imgBackground}>
-          <img src={EmployeesManagement} alt="Employees Management App" />
+    <section className={classes.employees}>
+      <Card>
+        <div className={classes.employeesHeader}>
+          <ul>
+            <li>Name</li>
+            <li>Phone</li>
+            <li>DateBirth</li>
+            <li>Email</li>
+            <li>Action</li>
+          </ul>
         </div>
-      )}
-    </>
+        {employees.length ? (
+          <ul>{employeesList}</ul>
+        ) : (
+          <p>No employees available!</p>
+        )}
+      </Card>
+    </section>
   );
 };
 

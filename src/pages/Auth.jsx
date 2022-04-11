@@ -1,5 +1,5 @@
 import React from "react";
-import AuthForm from "../components/Auth/AuthForm";
+import AuthForm from "../components/auth/AuthForm";
 
 const Auth = () => {
   return <AuthForm />;

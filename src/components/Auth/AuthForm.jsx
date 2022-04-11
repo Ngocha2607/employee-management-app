@@ -4,15 +4,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../store/reducers/user-slice";
 import Modal from "../UI/Modal";
 import classes from "./AuthForm.module.css";
-import { isShowLogin } from "../../store/reducers/ui-slice";
 
 const AuthForm = () => {
   const token = useSelector((state) => state.user.token);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,11 +21,7 @@ const AuthForm = () => {
     setIsLogin((prevState) => !prevState);
   };
 
-  const closeLogin = () => {
-    dispatch(isShowLogin());
-    navigate("/");
-  };
-
+  // Fetching user data
   useEffect(() => {
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAirGdnEkhcUBYEtFYzq5n2-p5HSiKHaJg', {
       method: "POST",
@@ -38,17 +35,11 @@ const AuthForm = () => {
       .then(async (res) => {
         if (res.ok) {
           return res.json();
-        } else {
-          let errorMessage = "User not found!";
-          throw new Error(errorMessage);
-        }
+        } 
       })
       .then((data) => {
        alert('Hi, ' + data.users[0].email);
       })
-      .catch((err) => {
-        //alert(err.message);
-      });
   }, [token])
 
   const submitHandler = (event) => {
@@ -96,7 +87,7 @@ const AuthForm = () => {
   };
 
   return (
-    <Modal onCancel={closeLogin}>
+    <Modal>
       <section className={classes.auth}>
         <h1>{isLogin ? "Login" : "Sign Up"}</h1>
         <form onSubmit={submitHandler}>
@@ -132,8 +123,6 @@ const AuthForm = () => {
           </button>
           </div>
         </form>
-    
-      
       </section>
     </Modal>
   );

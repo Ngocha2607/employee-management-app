@@ -7,20 +7,22 @@ import NewEmployee from "./pages/NewEmployee";
 import UpdateEmployee from "./pages/UpdateEmployee";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
+import RequireAuth from "./pages/RequireAuth";
 
 function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<AllEmployee />} />
-
-        <Route path="new-employee" element={<NewEmployee />} />
-        <Route path="update-employee" element={<UpdateEmployee />} />
-
-        <Route path="auth" element={<Auth />} />
+        <Route path="login" element={<Auth />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* RequireAuth components behaves like a route guard */}
+        <Route element={<RequireAuth />}>
+          <Route path="/" element={<AllEmployee />} />
+          <Route path="new-employee" element={<NewEmployee />} />
+          <Route path="update-employee" element={<UpdateEmployee />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
       </Routes>
     </Layout>
   );

@@ -1,18 +1,16 @@
 import React, { useRef, useState } from "react";
 import classes from "./EmployeeItemForm.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { updateEmployeeInList } from "../../store/reducers/employee-slice";
-import { toggle } from "../../store/reducers/ui-slice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addEmployeeToList } from "../../../store/reducers/employee-slice";
 
 const isEmpty = (value) => value.trim() === "";
+const isPhoneNumber = (phoneNumber) => phoneNumber.trim().length === 10;
 
-const UpdateEmployeeForm = (props) => {
-  const employeeUpdate = useSelector((state) =>
-    state.employee.employees.find(
-      (employee) => employee.userKey === props.userKey
-    )
-  );
+const EmployeeItemForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formInputValidity, setFormInputValidity] = useState({
     name: true,
     phone: true,
@@ -25,6 +23,10 @@ const UpdateEmployeeForm = (props) => {
   const inputDoBRef = useRef();
   const inputEmailRef = useRef();
 
+  const cancelHandler = () => {
+    navigate("/");
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -34,7 +36,7 @@ const UpdateEmployeeForm = (props) => {
     const enteredEmail = inputEmailRef.current.value;
 
     const enteredNameIsValue = !isEmpty(enteredName);
-    const enteredPhoneIsValue = !isEmpty(enteredPhone);
+    const enteredPhoneIsValue = isPhoneNumber(enteredPhone);
     const enteredDoBIsValue = !isEmpty(enteredDoB);
     const enteredEmailIsValue = !isEmpty(enteredEmail);
 
@@ -56,8 +58,7 @@ const UpdateEmployeeForm = (props) => {
     }
 
     dispatch(
-      updateEmployeeInList({
-        userKey: props.userKey,
+      addEmployeeToList({
         id: enteredPhone,
         name: enteredName,
         phone: enteredPhone,
@@ -66,8 +67,7 @@ const UpdateEmployeeForm = (props) => {
       })
     );
 
-    props.setShowUpdate(false);
-    dispatch(toggle());
+    navigate("/");
   };
 
   const nameControlClasses = `${classes.control} ${
@@ -88,56 +88,50 @@ const UpdateEmployeeForm = (props) => {
       <div className={classes["new-form"]}>
         <div className={nameControlClasses}>
           <label htmlFor="name">Employee Name</label>
-          <input
-            type="text"
-            id="name"
-            ref={inputNameRef}
-            defaultValue={employeeUpdate.name}
-          />
-          {!formInputValidity.name && <p>Please enter a valid name!</p>}
+          <input type="text" id="name" ref={inputNameRef} />
+          {!formInputValidity.name && (
+            <p className={classes.invalidationText}>
+              Please enter a valid name!
+            </p>
+          )}
         </div>
         <div className={phoneControlClasses}>
           <label htmlFor="phone">Phone number</label>
-          <input
-            type="text"
-            id="phone"
-            ref={inputPhoneRef}
-            defaultValue={employeeUpdate.phone}
-          />
+          <input type="text" id="phone" ref={inputPhoneRef} />
           {!formInputValidity.phone && (
-            <p>Please enter a valid phone number!</p>
+            <p className={classes.invalidationText}>
+              Phone number must contain 10 numbers!
+            </p>
           )}
         </div>
         <div className={dobControlClasses}>
           <label htmlFor="dob">Date of Birth</label>
-          <input
-            type="date"
-            id="dob"
-            ref={inputDoBRef}
-            defaultValue={employeeUpdate.dob}
-          />
-          {!formInputValidity.dob && <p>Please enter a valid date!</p>}
+          <input type="date" id="dob" ref={inputDoBRef} />
+          {!formInputValidity.dob && (
+            <p className={classes.invalidationText}>
+              Please enter a valid date!
+            </p>
+          )}
         </div>
         <div className={emailControlClasses}>
           <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            ref={inputEmailRef}
-            defaultValue={employeeUpdate.email}
-          />
-          {!formInputValidity.email && <p>Please enter a valid email!</p>}
+          <input type="email" id="email" ref={inputEmailRef} />
+          {!formInputValidity.email && (
+            <p className={classes.invalidationText}>
+              Please enter a valid email!
+            </p>
+          )}
         </div>
 
         <div className={classes.actions}>
-          <button type="button" onClick={props.onCancel}>
+          <button type="button" onClick={cancelHandler}>
             Cancel
           </button>
-          <button className={classes.submit}>Update</button>
+          <button className={classes.submit}>Confirm</button>
         </div>
       </div>
     </form>
   );
 };
 
-export default UpdateEmployeeForm;
+export default EmployeeItemForm;
