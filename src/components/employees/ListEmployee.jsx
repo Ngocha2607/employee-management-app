@@ -82,7 +82,7 @@ const ListEmployee = () => {
               <ul>
                 <li>Name</li>
                 <li>Phone</li>
-                <li>Date of Birth</li>
+                <li>DateBirth</li>
                 <li>Email</li>
                 <li>Action</li>
               </ul>

@@ -13,13 +13,14 @@
     padding: 1rem 0;
     width: inherit;
     display: flex;
-    justify-content: space-around;
     align-items: center;
     flex-direction: row;
     border-bottom: 1px solid #ccc;
 }
 
 .employeesHeader li {
+    padding-right: 11.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
