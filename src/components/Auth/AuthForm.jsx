@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../store/reducers/user-slice";
-import Modal from "../UI/Modal";
-import classes from "./AuthForm.module.css";
+import { Form, Input, Button, Modal, Alert } from "antd";
 
 const AuthForm = () => {
+
   const token = useSelector((state) => state.user.token);
 
   const dispatch = useDispatch();
@@ -16,6 +16,8 @@ const AuthForm = () => {
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState();
+  const [userInfor, setUserInfo] = useState();
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -23,30 +25,31 @@ const AuthForm = () => {
 
   // Fetching user data
   useEffect(() => {
-    fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAirGdnEkhcUBYEtFYzq5n2-p5HSiKHaJg', {
-      method: "POST",
-      body: JSON.stringify({
-        idToken: token,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAirGdnEkhcUBYEtFYzq5n2-p5HSiKHaJg",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          idToken: token,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then(async (res) => {
         if (res.ok) {
           return res.json();
-        } 
+        }
       })
       .then((data) => {
-       alert('Hi, ' + data.users[0].email);
-      })
-  }, [token])
+        setUserInfo("Hi, " + data.users[0].email);
+      });
+  }, [token]);
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
+  const submitHandler = (value) => {
+    const enteredEmail = value.Email;
+    const enteredPassword = value.password;
 
     setIsLoading(true);
     let url;
@@ -73,8 +76,7 @@ const AuthForm = () => {
         if (res.ok) {
           return res.json();
         } else {
-          let errorMessage = "Authentication failed!";
-          throw new Error(errorMessage);
+          throw new Error("Email or Password incorrect. Please try again!");
         }
       })
       .then((data) => {
@@ -82,49 +84,96 @@ const AuthForm = () => {
         navigate("/");
       })
       .catch((err) => {
-        alert(err.message);
+        setAuthError(err.message);
       });
   };
 
   return (
-    <Modal>
-      <section className={classes.auth}>
-        <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-        <form onSubmit={submitHandler}>
-          <div className={classes.control}>
-            <label htmlFor="email">Your Email</label>
-            <input type="email" id="email" required ref={emailInputRef} />
-          </div>
-          <div className={classes.control}>
-            <label htmlFor="password">Your Password</label>
-            <input
-              type="password"
-              id="password"
-              required
-              ref={passwordInputRef}
+      <Modal
+        visible={true}
+        footer={null}
+        closable={false}
+      >
+        <section>
+          <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+
+          {authError && (
+            <Alert
+            message="Error"
+            description={authError}
+            type="error"
+            showIcon
+            closable
             />
-          </div>
-          <div className={classes.actions}>
-            {!isLoading && (
-              <button>{isLogin ? "Login" : "Create Account"}</button>
-            )}
-            {isLoading && <p>Sending request...</p>}
-          </div>
-          <div className={classes.actions}>
-            <button
-              type="button"
-              className={classes.toggle}
-              onClick={switchAuthModeHandler}
+          )}
+
+          <Form
+            name="basic"
+            labelCol={{
+              span: 8,
+            }}
+            wrapperCol={{
+              span: 16,
+            }}
+            onFinish={submitHandler}
+            autoComplete="on"
+          >
+            <Form.Item
+              label="Email"
+              name="Email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+              ]}
             >
-              {isLogin ? "Create new account" : "Login with existing account"}
-            </button>
-          <button className={classes.toggle}>
-            <NavLink to='/forgot-password'>Forgot Password?</NavLink>
-          </button>
-          </div>
-        </form>
-      </section>
-    </Modal>
+              <Input ref={emailInputRef} placeholder="name@gmail.com" />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password ref={passwordInputRef} placeholder="********" />
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 8,
+                span: 16,
+              }}
+            >
+              {!isLoading && (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  shape="round"
+                  size="large"
+                >
+                  {isLogin ? "Login" : "Create Account"}
+                </Button>
+              )}
+              {isLoading && <p>Sending request...</p>}
+            </Form.Item>
+            <Form.Item>
+              <Button type="link" onClick={switchAuthModeHandler}>
+                {isLogin ? "Create New Account?" : "Existing Account?"}
+              </Button>
+
+              <Button type="link">
+                <NavLink to="/forgot-password">Forgot Password?</NavLink>
+              </Button>
+            </Form.Item>
+          </Form>
+        </section>
+      </Modal>
   );
 };
 

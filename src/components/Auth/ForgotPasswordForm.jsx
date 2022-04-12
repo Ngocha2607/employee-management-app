@@ -1,25 +1,24 @@
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Modal from "../UI/Modal";
-import classes from "./AuthForm.module.css";
 import { isShowLogin } from "../../store/reducers/ui-slice";
+import { Form, Input, Button, Modal, Alert } from "antd";
 
 const ForgotPasswordForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const emailInputRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
+  const [authError, setAuthError] = useState();
 
   const closeForgotPassword = () => {
     dispatch(isShowLogin());
     navigate("/");
   };
 
-  const submitHandler = (event) => {
-    event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
+  const submitHandler = (value) => {
+    const enteredEmail = value.Email;
 
     setIsLoading(true);
 
@@ -41,7 +40,7 @@ const ForgotPasswordForm = () => {
         if (res.ok) {
           return res.json();
         } else {
-          let errorMessage = "Authentication failed!";
+          let errorMessage = "Incorrect Email. Please try again!";
           throw new Error(errorMessage);
         }
       })
@@ -49,34 +48,78 @@ const ForgotPasswordForm = () => {
         navigate("/");
       })
       .catch((err) => {
-        alert(err.message);
+        setAuthError(err.message);
       });
   };
 
   return (
-    <Modal onCancel={closeForgotPassword}>
-      <section className={classes.auth}>
+    <Modal visible={true} footer={null} closable={false}>
+      <section>
         <h1>Forgot Password</h1>
-        <form onSubmit={submitHandler}>
-          <div className={classes.control}>
-            <label htmlFor="email">Your Email</label>
-            <input type="email" id="email" required ref={emailInputRef} />
-          </div>
-          <div className={classes.actions}>
+
+        {authError && (
+          <Alert
+          message="Error"
+          description={authError}
+          type="error"
+          showIcon
+          closable
+          />
+        )}
+
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          onFinish={submitHandler}
+          autoComplete="on"
+        >
+          <Form.Item
+            label="Email"
+            name="Email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <Input ref={emailInputRef} placeholder="name@gmail.com" />
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          >
             {!isLoading && (
               <>
-                <button
-                  className={classes.cancelBtn}
+                <Button
+                  type="danger"
+                  shape="round"
+                  size="large"
                   onClick={closeForgotPassword}
                 >
                   Cancel
-                </button>
-                <button>Send Email</button>
+                </Button>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  shape="round"
+                  size="large"
+                >
+                  Send Email
+                </Button>
               </>
             )}
             {isLoading && <p>Sending request...</p>}
-          </div>
-        </form>
+          </Form.Item>
+        </Form>
       </section>
     </Modal>
   );
