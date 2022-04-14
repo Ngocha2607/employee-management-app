@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { isShowLogin } from "../../store/reducers/ui-slice";
-import { Form, Input, Button, Modal, Alert } from "antd";
+import { Form, Input, Button, Modal, Alert, Divider } from "antd";
 
 const ForgotPasswordForm = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,6 @@ const ForgotPasswordForm = () => {
     dispatch(isShowLogin());
     navigate("/");
   };
-
 
   const submitHandler = (value) => {
     const enteredEmail = value.Email;
@@ -54,16 +53,18 @@ const ForgotPasswordForm = () => {
 
   return (
     <Modal visible={true} footer={null} closable={false}>
-      <section>
-        <h1>Forgot Password</h1>
+        <Divider>
+          <h1>Forgot Password</h1>
+        </Divider>
 
         {authError && (
           <Alert
-          message="Error"
-          description={authError}
-          type="error"
-          showIcon
-          closable
+            message="Error"
+            description={authError}
+            type="error"
+            showIcon
+            closable
+            style={{ marginBottom: "1rem" }}
           />
         )}
 
@@ -104,6 +105,7 @@ const ForgotPasswordForm = () => {
                   shape="round"
                   size="large"
                   onClick={closeForgotPassword}
+                  style={{ marginRight: "1rem" }}
                 >
                   Cancel
                 </Button>
@@ -120,7 +122,6 @@ const ForgotPasswordForm = () => {
             {isLoading && <p>Sending request...</p>}
           </Form.Item>
         </Form>
-      </section>
     </Modal>
   );
 };

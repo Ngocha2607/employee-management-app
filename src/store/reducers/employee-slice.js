@@ -4,6 +4,8 @@ import {
   removeEmployeeHandler,
   updateEmployeeHandler,
 } from "../../components/firebase_api/api";
+import { notification } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
 
 const initialState = {
   employees: [],
@@ -33,7 +35,11 @@ const employeeSlice = createSlice({
         });
         addEmployeeHandler(newEmployee);
       } else {
-        alert("This employee already exists!");
+        notification.open({
+          message: "Server Feedback",
+          description: "This employee already exists!",
+          icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+        });
       }
     },
 
@@ -49,7 +55,11 @@ const employeeSlice = createSlice({
         );
         removeEmployeeHandler(existingEmployee.userKey);
       } else {
-        alert("This employee is not available");
+        notification.open({
+          message: "Confirm message",
+          description: "Are you sure to delete this employee? Please press again to confirm!",
+          icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+        });      
       }
     },
 
@@ -68,7 +78,11 @@ const employeeSlice = createSlice({
 
         updateEmployeeHandler(existingEmployee.userKey, existingEmployee);
       } else {
-        alert("This employee is not available");
+        notification.open({
+          message: "Server Feedback",
+          description: "This employee is not available",
+          icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+        });  
       }
     },
   },

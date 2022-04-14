@@ -48,9 +48,3 @@
         transform: translateY(0);
     }
 }
-
-.imgBackground img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}

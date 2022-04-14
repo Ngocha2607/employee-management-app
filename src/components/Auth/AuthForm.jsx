@@ -1,13 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../store/reducers/user-slice";
-import { Form, Input, Button, Modal, Alert } from "antd";
+import { Form, Input, Button, Modal, Alert, notification, Divider } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
 
 const AuthForm = () => {
-
-  const token = useSelector((state) => state.user.token);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,15 +15,14 @@ const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState();
-  const [userInfor, setUserInfo] = useState();
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
 
   // Fetching user data
-  useEffect(() => {
-    fetch(
+  const fetchUserInfo = async (token) => {
+    const response = await fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAirGdnEkhcUBYEtFYzq5n2-p5HSiKHaJg",
       {
         method: "POST",
@@ -36,16 +33,14 @@ const AuthForm = () => {
           "Content-Type": "application/json",
         },
       }
-    )
-      .then(async (res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        setUserInfo("Hi, " + data.users[0].email);
-      });
-  }, [token]);
+    );
+    const responseData = await response.json();
+    notification.open({
+      message: "Greeting User",
+      description: "Welcome, " + responseData.users[0].email,
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
+  };
 
   const submitHandler = (value) => {
     const enteredEmail = value.Email;
@@ -82,6 +77,7 @@ const AuthForm = () => {
       .then((data) => {
         dispatch(login(data.idToken));
         navigate("/");
+        fetchUserInfo(data.idToken);
       })
       .catch((err) => {
         setAuthError(err.message);
@@ -89,79 +85,76 @@ const AuthForm = () => {
   };
 
   return (
-      <Modal
-        visible={true}
-        footer={null}
-        closable={false}
-      >
-        <section>
-          <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+    <Modal visible={true} footer={null} closable={false}>
+        <Divider><h1>{isLogin ? "Login" : "Sign Up"}</h1></Divider>
 
-          {authError && (
-            <Alert
+        {authError && (
+          <Alert
             message="Error"
             description={authError}
             type="error"
             showIcon
             closable
-            />
-          )}
+            style={{ marginBottom: "1rem" }}
+          />
+        )}
 
-          <Form
-            name="basic"
-            labelCol={{
-              span: 8,
-            }}
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          onFinish={submitHandler}
+          autoComplete="on"
+        >
+          <Form.Item
+            label="Email"
+            name="Email"
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+            ]}
+          >
+            <Input ref={emailInputRef} placeholder="name@gmail.com" />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+            ]}
+          >
+            <Input.Password ref={passwordInputRef} placeholder="********" />
+          </Form.Item>
+
+          <Form.Item
             wrapperCol={{
+              offset: 8,
               span: 16,
             }}
-            onFinish={submitHandler}
-            autoComplete="on"
           >
-            <Form.Item
-              label="Email"
-              name="Email"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-              ]}
-            >
-              <Input ref={emailInputRef} placeholder="name@gmail.com" />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password ref={passwordInputRef} placeholder="********" />
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              {!isLoading && (
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  shape="round"
-                  size="large"
-                >
-                  {isLogin ? "Login" : "Create Account"}
-                </Button>
-              )}
-              {isLoading && <p>Sending request...</p>}
-            </Form.Item>
+            {!isLoading && (
+              <Button
+                type="primary"
+                htmlType="submit"
+                shape="round"
+                size="large"
+              >
+                {isLogin ? "Login" : "Create Account"}
+              </Button>
+            )}
+            {isLoading && <p>Sending request...</p>}
+          </Form.Item>
+          <Divider orientation="center">
             <Form.Item>
               <Button type="link" onClick={switchAuthModeHandler}>
                 {isLogin ? "Create New Account?" : "Existing Account?"}
@@ -171,9 +164,9 @@ const AuthForm = () => {
                 <NavLink to="/forgot-password">Forgot Password?</NavLink>
               </Button>
             </Form.Item>
-          </Form>
-        </section>
-      </Modal>
+          </Divider>
+        </Form>
+    </Modal>
   );
 };
 

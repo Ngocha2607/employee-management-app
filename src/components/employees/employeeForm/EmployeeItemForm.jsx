@@ -1,32 +1,8 @@
-import React, { useRef, useState } from "react";
-import classes from "./EmployeeItemForm.module.css";
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addEmployeeToList } from "../../../store/reducers/employee-slice";
-import { Form, Input, InputNumber, Button, DatePicker } from "antd";
-
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-
-/* eslint-disable no-template-curly-in-string */
-
-const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    email: '${label} is not a valid email!',
-    number: '${label} is not a valid number!',
-    birthdate:  'Please select time!',
-  },
-  number: {
-    range: '${label} must be between ${min} and ${max}',
-  },
-};
+import { Form, Input, Button, Divider, Card } from "antd";
 
 const EmployeeItemForm = () => {
   const dispatch = useDispatch();
@@ -34,7 +10,6 @@ const EmployeeItemForm = () => {
 
   const inputNameRef = useRef();
   const inputEmailRef = useRef();
-  const inputAgeRef = useRef();
   const inputPhoneRef = useRef();
   const inputDoBRef = useRef();
 
@@ -43,11 +18,10 @@ const EmployeeItemForm = () => {
   };
 
   const submitHandler = (value) => {
-    const enteredName = value.employee.name;
-    const enteredPhone = value.employee.phone;
-    const enteredDoB = value.employee.birthdate;
-    const enteredEmail = value.employee.email;
-    const enteredAge = value.employee.age;
+    const enteredName = value.name;
+    const enteredPhone = value.phone;
+    const enteredDoB = value.birthdate;
+    const enteredEmail = value.email;
 
     dispatch(
       addEmployeeToList({
@@ -63,48 +37,92 @@ const EmployeeItemForm = () => {
   };
 
   return (
-    <Form
-      {...layout}
-      name="nest-messages"
-      onFinish={submitHandler}
-      validateMessages={validateMessages}
-    >
-      <Form.Item
-        name={["employee", "name"]}
-        label="Name"
-        rules={[{ required: true }]}
+    <Card style={{
+      margin: '0 auto',
+      boxShadow: '0px 1px 4px 1px rgb(0 0 0 / 20%)',
+      width: '80%',
+      maxWidth: '40rem',
+      background: '#d0eaf7'
+    }}>
+      <Divider>
+        <h1>New Employee</h1>
+      </Divider>
+
+      <Form
+        name="basic"
+        labelCol={{
+          span: 8,
+        }}
+        wrapperCol={{
+          span: 16,
+        }}
+        onFinish={submitHandler}
+        autoComplete="on"
       >
-        <Input ref={inputNameRef} />
-      </Form.Item>
-      <Form.Item
-        name={["employee", "email"]}
-        label="Email"
-        rules={[{ required: true, type: "email" }]}
-      >
-        <Input ref={inputEmailRef} />
-      </Form.Item>
-      <Form.Item
-        name={["employee", "age"]}
-        label="Age"
-        rules={[{ required: true, type: "number", min: 0, max: 99 }]}
-      >
-        <InputNumber ref={inputAgeRef} />
-      </Form.Item>
-      <Form.Item name={["employee", "phone"]} label="Phone Number" rules={[{ required: true }]}>
-        <Input ref={inputPhoneRef} />
-      </Form.Item>
-      <Form.Item name={["employee", "birthdate"]} label="BirthDate" rules={[{ required: true}]}>
-        <Input ref={inputDoBRef} />
-      </Form.Item>
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-        <Button type="primary" onClick={cancelHandler}>
-          Cancel
-        </Button>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: "Please input employee name!",
+            },
+          ]}
+        >
+          <Input ref={inputNameRef} placeholder="Nguyen Van A" />
+        </Form.Item>
+
+        <Form.Item
+          label="Phone Number"
+          name="phone"
+          rules={[
+            {
+              required: true,
+              message: "Please input employee phone number!",
+            },
+          ]}
+        >
+          <Input ref={inputPhoneRef} placeholder="0987654321" />
+        </Form.Item>
+
+        <Form.Item
+          name="birthdate"
+          label="BirthDate"
+          rules={[{ required: true, message: "Please pick the date!" }]}
+        >
+          <Input ref={inputDoBRef} placeholder="01-01-2000" />
+        </Form.Item>
+
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ required: true, message: "Please input employee email!" }]}
+        >
+          <Input ref={inputEmailRef} placeholder="name@gmail.com" />
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            offset: 8,
+            span: 16,
+          }}
+        >
+          <Button
+            type="danger"
+            shape="round"
+            size="large"
+            onClick={cancelHandler}
+            style={{marginRight: "1rem"}}
+          >
+            Cancel
+          </Button>
+
+          <Button type="primary" htmlType="submit" shape="round" size="large">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 

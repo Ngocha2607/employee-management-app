@@ -1,4 +1,6 @@
- 
+import { notification } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
+
 export const addEmployeeHandler = async (employeeData) => {
       await fetch(
         "https://my-employees-management-f01ab-default-rtdb.firebaseio.com/employees.json",
@@ -17,7 +19,11 @@ export const removeEmployeeHandler = async (employeelocation) => {
         body: JSON.stringify(),
       }
     );
-    alert("Delete successfully!");
+    notification.open({
+      message: "Server Feedback",
+      description: "Delete successfully!",
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
   };
   
 export const updateEmployeeHandler = async (employeePath, employeeData) => {
@@ -28,6 +34,10 @@ export const updateEmployeeHandler = async (employeePath, employeeData) => {
         body: JSON.stringify(employeeData ),
       }
     );
-    alert("Update successfully!");
+    notification.open({
+      message: "Server Feedback",
+      description: "Update successfully!",
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
   };
   

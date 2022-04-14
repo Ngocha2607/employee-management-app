@@ -1,0 +1,48 @@
+.header {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 50px;
+    padding: 0 5%;
+    background: #008080;
+    z-index: 1;
+}
+
+.header ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: inherit;
+}
+
+.header li {
+    margin-left: 1.5rem;
+    font-size: 1.25rem;
+}
+
+
+
+.logo {
+    background: #e6f7ff;
+    color: #893a3a;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 0 25px;
+    border-radius: 45%;
+}
+
+.main {
+    padding: 100px 2px 0;
+}
+
+@media screen and (max-width: 698px) {
+    .logo {
+        display: none;
+    }
+    .header li {
+        margin-left: 0.5rem;
+        font-size: 1rem;
+    }
+}
