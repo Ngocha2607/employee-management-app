@@ -56,8 +56,8 @@ const employeeSlice = createSlice({
         removeEmployeeHandler(existingEmployee.userKey);
       } else {
         notification.open({
-          message: "Confirm message",
-          description: "Are you sure to delete this employee? Please press again to confirm!",
+          message: "Server Feedback",
+          description: "This employee is not available. Please try again!",
           icon: <SmileOutlined style={{ color: "#108ee9" }} />,
         });      
       }

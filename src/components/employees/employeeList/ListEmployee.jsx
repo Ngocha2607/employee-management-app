@@ -19,9 +19,6 @@ const ListEmployee = () => {
 
   const [showUpdate, setShowUpdate] = useState(false);
 
-  const removeEmployeeHandler = () => {
-    dispatch(removeEmployeeFromList(getUserToken));
-  };
   const showUpdateHandler = () => {
     setShowUpdate(true);
   };
@@ -64,7 +61,7 @@ const ListEmployee = () => {
 
   if (isLoading) {
     return (
-      <Card style={{ textAlign: "center", fontSize: "1.5rem" }}>
+      <Card style={{ textAlign: "center", fontSize: "1.5rem", border: "none" }}>
         Loading...
       </Card>
     );
@@ -86,53 +83,57 @@ const ListEmployee = () => {
   /* Same as onRow onHeaderRow onCell onHeaderCell */
   return (
     <>
-    <Table dataSource={data} rowKey={(record) => record.userKey} style={{ padding: "0 20px" }}>
-      <Column title="Name" dataIndex="name" key="name" />
-      <Column title="Phone" dataIndex="phone" key="phone" />
-      <Column title="BirthDate" dataIndex="dob" key="dob" />
-      <Column title="Email" dataIndex="email" key="email" />
-      <Column
-        title="Action"
-        key="action"
-        onCell={(record) => {
-          return {
-            onClick: (event) => {
-              setGetUserToken(record.userKey);
-            }, // click row
-          };
-        }}
-        render={(text, record) => (
-          <Space size="middle">
-            <Button
-              type="primary"
-              shape="round"
-              size="medium"
-              onClick={showUpdateHandler}
-            >
-              Update
-            </Button>
-            <Button
-              type="danger"
-              shape="round"
-              size="medium"
-              onClick={removeEmployeeHandler}
-            >
-              Delete
-            </Button>
-          </Space>
-        )}
-      />
-    </Table>
-          {showUpdate && (
-            <Modal visible={true} footer={null} onCancel={cancelUpdateHandler}>
-              <UpdateEmployee
-                userKey={getUserToken}
-                onCancel={cancelUpdateHandler}
-                setShowUpdate={setShowUpdate}
-              />
-            </Modal>
+      <Table
+        dataSource={data}
+        rowKey={(record) => record.userKey}
+        style={{ padding: "0 20px" }}
+      >
+        <Column title="Name" dataIndex="name" key="name" />
+        <Column title="Phone" dataIndex="phone" key="phone" />
+        <Column title="BirthDate" dataIndex="dob" key="dob" />
+        <Column title="Email" dataIndex="email" key="email" />
+        <Column
+          title="Action"
+          key="action"
+          onCell={(record) => {
+            return {
+              onClick: (event) => {
+                setGetUserToken(record.userKey);
+              }, // click row
+            };
+          }}
+          render={(text, record) => (
+            <Space size="middle">
+              <Button
+                type="primary"
+                shape="round"
+                size="medium"
+                onClick={showUpdateHandler}
+              >
+                Update
+              </Button>
+              <Button
+                type="danger"
+                shape="round"
+                size="medium"
+                onClick={() => {dispatch(removeEmployeeFromList(record.userKey))}}
+              >
+                Delete
+              </Button>
+            </Space>
           )}
-          </>
+        />
+      </Table>
+      {showUpdate && (
+        <Modal visible={true} footer={null} onCancel={cancelUpdateHandler}>
+          <UpdateEmployee
+            userKey={getUserToken}
+            onCancel={cancelUpdateHandler}
+            setShowUpdate={setShowUpdate}
+          />
+        </Modal>
+      )}
+    </>
   );
 };
 
