@@ -3,7 +3,7 @@ import {
   addEmployeeHandler,
   removeEmployeeHandler,
   updateEmployeeHandler,
-} from "../../components/firebase_api/api";
+} from "../../models/employee-management/firebase_api/api";
 import { notification } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 
@@ -16,7 +16,17 @@ const employeeSlice = createSlice({
   initialState,
   reducers: {
     replaceData: (state, action) => {
-      state.employees = action.payload;
+      const getEmployees = action.payload;
+      for (const key in getEmployees) {
+        const existingEmployee = state.employees.find(
+          (employee) => employee.id === getEmployees[key].id
+        );
+        if (!existingEmployee) {
+          state.employees.push(getEmployees[key]);
+        } else {
+          return;
+        }
+      }
     },
 
     addEmployeeToList: (state, action) => {
@@ -26,13 +36,7 @@ const employeeSlice = createSlice({
       );
 
       if (!existingEmployee) {
-        state.employees.push({
-          id: newEmployee.id,
-          name: newEmployee.name,
-          phone: newEmployee.phone,
-          dob: newEmployee.dob,
-          email: newEmployee.email,
-        });
+        state.employees.push(newEmployee);
         addEmployeeHandler(newEmployee);
       } else {
         notification.open({
@@ -59,7 +63,7 @@ const employeeSlice = createSlice({
           message: "Server Feedback",
           description: "This employee is not available. Please try again!",
           icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-        });      
+        });
       }
     },
 
@@ -82,7 +86,7 @@ const employeeSlice = createSlice({
           message: "Server Feedback",
           description: "This employee is not available",
           icon: <SmileOutlined style={{ color: "#108ee9" }} />,
-        });  
+        });
       }
     },
   },

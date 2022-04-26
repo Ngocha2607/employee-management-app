@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateEmployeeInList } from "../../../store/reducers/employee-slice";
+import { updateEmployeeInList } from "../../../../store/reducers/employee-slice";
 import { Form, Input, Button, Divider, Card } from "antd";
 
 const UpdateEmployeeForm = (props) => {
@@ -17,7 +17,6 @@ const UpdateEmployeeForm = (props) => {
   const inputEmailRef = useRef();
 
   const submitHandler = (value) => {
-
     const enteredName = value.name;
     const enteredPhone = value.phone;
     const enteredDoB = value.birthdate;
@@ -37,12 +36,12 @@ const UpdateEmployeeForm = (props) => {
     props.setShowUpdate(false);
   };
 
-
-
   return (
-    <Card style={{
-      border: 'none'
-    }}>
+    <Card
+      style={{
+        border: "none",
+      }}
+    >
       <Divider>
         <h1>Update Employee</h1>
       </Divider>
@@ -115,7 +114,7 @@ const UpdateEmployeeForm = (props) => {
             shape="round"
             size="large"
             onClick={props.onCancel}
-            style={{marginRight: "1rem"}}
+            style={{ marginRight: "1rem" }}
           >
             Cancel
           </Button>

@@ -1,5 +1,5 @@
 import React from "react";
-import ListEmployee from "../components/employees/employeeList/ListEmployee";
+import ListEmployee from "../models/employee-management/employees/employeeList/ListEmployee";
 
 const AllEmployee = () => {
   return <ListEmployee />;

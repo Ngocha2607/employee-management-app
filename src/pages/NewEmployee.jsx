@@ -1,10 +1,8 @@
-import React from 'react'
-import EmployeeItemForm from '../components/employees/employeeForm/EmployeeItemForm';
+import React from "react";
+import EmployeeItemForm from "../models/employee-management/employees/employeeForm/EmployeeItemForm";
 
 const NewEmployee = () => {
-  return (
-    <EmployeeItemForm />
-  )
-}
+  return <EmployeeItemForm />;
+};
 
-export default NewEmployee
+export default NewEmployee;

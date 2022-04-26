@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addEmployeeToList } from "../../../store/reducers/employee-slice";
+import { addEmployeeToList } from "../../../../store/reducers/employee-slice";
 import { Form, Input, Button, Divider, Card } from "antd";
 
 const EmployeeItemForm = () => {
@@ -37,13 +37,15 @@ const EmployeeItemForm = () => {
   };
 
   return (
-    <Card style={{
-      margin: '0 auto',
-      boxShadow: '0px 1px 4px 1px rgb(0 0 0 / 20%)',
-      width: '80%',
-      maxWidth: '40rem',
-      background: '#d0eaf7'
-    }}>
+    <Card
+      style={{
+        margin: "0 auto",
+        boxShadow: "0px 1px 4px 1px rgb(0 0 0 / 20%)",
+        width: "80%",
+        maxWidth: "40rem",
+        background: "#d0eaf7",
+      }}
+    >
       <Divider>
         <h1>New Employee</h1>
       </Divider>
@@ -112,7 +114,7 @@ const EmployeeItemForm = () => {
             shape="round"
             size="large"
             onClick={cancelHandler}
-            style={{marginRight: "1rem"}}
+            style={{ marginRight: "1rem" }}
           >
             Cancel
           </Button>
